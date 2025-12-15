@@ -25,11 +25,18 @@ b = BPF(text=program)
 syscall = b.get_syscall_fnname("execve")
 b.attach_kprobe(event=syscall, fn_name="hello")
 
+openat = b.get_syscall_fnname("openat")
+b.attach_kprobe(event=openat, fn_name="hello")
+
+write = b.get_syscall_fnname("write")
+b.attach_kprobe(event=write, fn_name="hello")
+
 # Attach to a tracepoint that gets hit for all syscalls 
 # b.attach_raw_tracepoint(tp="sys_enter", fn_name="hello")
 
 while True:
     sleep(2)
+    print("=========================================\n")
     s = ""
     for k,v in b["counter_table"].items():
         s += f"ID {k.value}: {v.value}\t"
